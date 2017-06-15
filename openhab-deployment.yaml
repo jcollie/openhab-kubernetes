@@ -1,0 +1,78 @@
+# -*- mode: yaml; coding: utf-8 -*-
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: openhab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: openhab
+    spec:
+      nodeSelector:
+        local-device: aeotec-z-wave-z-stick
+        local-volume: openhab
+      containers:
+      - name: openhab
+        image: openhab/openhab:2.1.0-snapshot-amd64
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        - containerPort: 8101
+          name: console
+          protocol: TCP
+        volumeMounts:
+        - name: aeotec-z-wave-z-stick
+          mountPath: /dev/ttyACM0
+          readOnly: false
+        - name: etc-localtime
+          mountPath: /etc/localtime
+          readOnly: true
+        - name: openhab-conf
+          mountPath: /openhab/conf
+          readOnly: false
+        - name: openhab-userdata
+          mountPath: /openhab/userdata
+          readOnly: false
+        - name: openhab-addons
+          mountPath: /openhab/addons
+          readOnly: false
+        - name: openhab-java
+          mountPath: /openhab/.java
+          readOnly: false
+        - name: openhab-karaf
+          mountPath: /openhab/.karaf
+          readOnly: false
+      volumes:
+      - name: aeotec-z-wave-z-stick
+        hostPath:
+          path: /dev/ttyACM0
+      - name: etc-localtime
+        hostPath:
+          path: /usr/share/zoneinfo/America/Chicago
+      - name: openhab-conf
+        hostPath:
+          path: /openhab/conf
+      - name: openhab-userdata
+        hostPath:
+          path: /openhab/userdata
+      - name: openhab-addons
+        hostPath:
+          path: /openhab/addons
+      - name: openhab-java
+        hostPath:
+          path: /openhab/.java
+      - name: openhab-karaf
+        hostPath:
+          path: /openhab/.karaf
+      terminationGracePeriodSeconds: 300
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:

@@ -1,0 +1,26 @@
+# -*- mode: yaml; coding: utf-8 -*-
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhab
+spec:
+  selector:
+    app: openhab
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: http
+      name: openhab-http
+    - protocol: TCP
+      port: 8443
+      targetPort: https
+      name: openhab-https
+    - protocol: TCP
+      port: 8101
+      targetPort: console
+      name: openhab-console
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
